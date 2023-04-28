@@ -2,14 +2,18 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
-    "dev": "tsx --watch src/server.ts",
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js",
+    "dev": "tsx --watch src/index.ts",
     "server:dev": "npx json-server --watch src/data/data.json"
   },
   "keywords": [],
-  "author": "jayromberg",
+  "author": "",
   "devDependencies": {
+    "@types/node": "^18.16.2",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
     "dotenv": "^16.0.3",
@@ -21,5 +25,9 @@
     "json-server": "^0.17.3",
     "tsx": "^3.12.6",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.7.0",
+    "graphql": "^16.6.0"
   }
 }
