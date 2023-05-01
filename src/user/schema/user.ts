@@ -7,5 +7,6 @@ export const UserSchema = `
 
   type Query {
     users: [User]
+    user(id: ID!): User!
   }
 `;
