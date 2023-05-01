@@ -1,6 +1,4 @@
-import { buildSchema } from 'graphql';
-
-export const UserSchema = buildSchema(`
+export const UserSchema = `
   type User {
     nome: String!
     ativo: Boolean!
@@ -10,4 +8,4 @@ export const UserSchema = buildSchema(`
   type Query {
     users: [User]
   }
-`);
+`;

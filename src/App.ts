@@ -1,31 +1,52 @@
 import express from 'express';
+import cors from 'cors';
+import http from 'http';
+import { ApolloServer } from '@apollo/server';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { expressMiddleware } from '@apollo/server/express4';
+import bodyParser from 'body-parser';
+import IMyContext from './interfaces/IMyContext';
 
 class App {
   public app: express.Express;
+  protected httpServer: http.Server;
+  protected apolloServer: ApolloServer;
 
   constructor () {
     this.app = express();
-
+    this.httpServer = http.createServer(this.app);
     this.config();
 
     // Não remover essa rota
-    this.app.get('/', (req, res) => res.json({ ok: true }));
+    this.app.get('/', (_req, res) => res.json({ ok: true }));
   }
 
   private config (): void {
-    const accessControl: express.RequestHandler = (_req, res, next) => {
-      res.header('Access-Control-Allow-Origin', '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS,PUT,PATCH');
-      res.header('Access-Control-Allow-Headers', '*');
-      next();
-    };
-
-    this.app.use(express.json());
-    this.app.use(accessControl);
+    this.app.use(cors<cors.CorsRequest>({
+      origin: '*'
+    }));
+    this.app.use(bodyParser.json());
   }
 
-  public start (PORT: string | number): void {
-    this.app.listen(PORT, () => { console.log(`Running on port ${PORT}`); });
+  public async configApollo (typeDefs: any, resolvers: any): Promise<void> {
+    const httpServer = this.httpServer;
+
+    this.apolloServer = new ApolloServer<IMyContext>({
+      typeDefs,
+      resolvers,
+      plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
+    });
+
+    await this.apolloServer.start();
+  }
+
+  public async startServer (PORT: number): Promise<void> {
+    this.app.use(expressMiddleware(this.apolloServer, {
+      context: async ({ req }) => ({ token: req.headers.token })
+    }))
+
+    await new Promise<void>((resolve) => this.httpServer.listen({ port: PORT }, resolve));
+    console.log(`🚀 Server ready at http://localhost:${PORT}/`);
   }
 }
 

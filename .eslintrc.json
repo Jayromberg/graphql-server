@@ -64,6 +64,7 @@
         "@typescript-eslint/lines-between-class-members": ["off"],
         "@typescript-eslint/semi": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
-        "@typescript-eslint/prefer-nullish-coalescing": "off"
+        "@typescript-eslint/prefer-nullish-coalescing": "off",
+        "@typescript-eslint/consistent-type-imports": "off"
     }
 }
