@@ -27,6 +27,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "@apollo/datasource-rest": "^5.1.0",
     "@apollo/server": "^4.7.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
