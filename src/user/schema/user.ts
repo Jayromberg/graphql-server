@@ -3,6 +3,12 @@ export const UserSchema = `
     nome: String!
     ativo: Boolean!
     email: String
+    role: Role!
+  }
+
+  type Role {
+    id: ID!
+    type: String!
   }
 
   type Query {

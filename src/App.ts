@@ -42,19 +42,21 @@ class App {
   }
 
   public async startServer (PORT: number): Promise<void> {
-    this.app.use(expressMiddleware(this.apolloServer, {
-      context: async ({ req }) => {
-        const { cache } = this.apolloServer;
-        const token = req.headers.token;
+    this.app.use(
+      expressMiddleware(this.apolloServer, {
+        context: async ({ req }) => {
+          const { cache } = this.apolloServer;
+          const token = req.headers.token;
 
-        return {
-          token,
-          dataSources: {
-            usersAPI: new UsersAPI({ cache })
-          }
-        };
-      }
-    }))
+          return {
+            token,
+            dataSources: {
+              usersAPI: new UsersAPI({ cache })
+            }
+          };
+        }
+      })
+    )
 
     await new Promise<void>((resolve) => this.httpServer.listen({ port: PORT }, resolve));
     console.log(`🚀 Server ready at http://localhost:${PORT}/`);
