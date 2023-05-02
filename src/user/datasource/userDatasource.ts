@@ -6,17 +6,19 @@ export class UsersAPI extends RESTDataSource {
 
   async getUsers (): Promise<IUser[]> {
     const data = await this.get('users');
-    const roles = await this.get('roles');
 
-    const users = data.map((user: IUser) => ({
+    const users = data.map(async (user: IUser) => ({
       ...user,
-      role: roles.find((role: { id: number, type: string }) => role.id === user.role)
+      role: await this.get(`roles/${encodeURIComponent(user.role)}`)
     }))
 
     return users;
   }
 
   async getUserById (id: string): Promise<IUser> {
-    return await this.get<IUser>(`users/${encodeURIComponent(id)}`);
+    const data = await this.get<IUser>(`users/${encodeURIComponent(id)}`);
+    data.role = await this.get(`roles/${encodeURIComponent(data.role)}`);
+
+    return data;
   }
 };
