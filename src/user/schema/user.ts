@@ -15,4 +15,13 @@ export const UserSchema = `
     users: [User]
     user(id: ID!): User!
   }
+
+  type Mutation {
+    createUser(
+      nome: String!
+      ativo: Boolean!
+      email: String
+      role: String!
+    )
+  }
 `;

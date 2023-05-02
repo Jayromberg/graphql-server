@@ -6,5 +6,10 @@ export const userResolvers = {
     user: async (_, { id }, { dataSources }) => {
       return dataSources.usersAPI.getUserById(id);
     }
+  },
+  Mutation: {
+    createUser: async (_, { nome, ativo, email, role }, { dataSources }) => {
+      return dataSources.usersAPI.createUser({ nome, ativo, email, role });
+    }
   }
 }
