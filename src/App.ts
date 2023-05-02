@@ -46,12 +46,12 @@ class App {
       expressMiddleware(this.apolloServer, {
         context: async ({ req }) => {
           const { cache } = this.apolloServer;
-          const token = req.headers.token;
+          const token = req.header('authorization');
 
           return {
             token,
             dataSources: {
-              usersAPI: new UsersAPI({ cache })
+              usersAPI: new UsersAPI({ token, cache })
             }
           };
         }
