@@ -51,10 +51,9 @@
     },
     {
       "id": 8,
-      "nome": "Jayro",
-      "ativo": true,
-      "email": "test@test.com.br",
-      "role": 3
+      "nome": "Jayromberg",
+      "ativo": false,
+      "role": 1
     }
   ],
   "roles": [

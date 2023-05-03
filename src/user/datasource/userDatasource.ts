@@ -53,4 +53,17 @@ export class UsersAPI extends RESTDataSource {
       role
     }
   }
+
+  async updateUser (user: IUser): Promise<IUserRes> {
+    const [role] = await this.get<IRole[]>(`roles?type=${user.role}`);
+    await this.put(`users/${user.id}`, { body: {
+      ...user,
+      role: role.id
+    } })
+
+    return {
+      ...user,
+      role
+    }
+  }
 };

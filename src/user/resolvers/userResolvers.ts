@@ -10,6 +10,9 @@ export const userResolvers = {
   Mutation: {
     createUser: async (_, { nome, ativo, email, role }, { dataSources }) => {
       return dataSources.usersAPI.createUser({ nome, ativo, email, role });
+    },
+    updateUser: async (_, { id, nome, ativo, email, role }, { dataSources }) => {
+      return dataSources.usersAPI.updateUser({ id, nome, ativo, email, role });
     }
   }
 }
