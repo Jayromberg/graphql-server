@@ -4,6 +4,7 @@ export interface IUser {
   ativo: boolean
   email: string
   role: number | string
+  createdAt?: Date
 };
 
 export interface IRole {
