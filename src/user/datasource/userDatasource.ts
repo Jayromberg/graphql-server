@@ -1,18 +1,19 @@
 import { RESTDataSource, AugmentedRequest } from '@apollo/datasource-rest';
 import type { KeyValueCache } from '@apollo/utils.keyvaluecache';
 import { IUser, IUserRes, IRole } from '../../interfaces/IUser';
+import { ContextValue } from '../../ContextValue';
 
 export class UsersAPI extends RESTDataSource {
   override baseURL = 'http://localhost:3000/';
-  private readonly token: string;
+  private readonly contextValue: ContextValue;
 
-  constructor (options: { token: string, cache: KeyValueCache }) {
+  constructor (options: { contextValue: ContextValue, cache: KeyValueCache }) {
     super(options);
-    this.token = options.token;
+    this.contextValue = options.contextValue;
   }
 
   override willSendRequest (_path: string, request: AugmentedRequest): void {
-    request.headers.authorization = this.token;
+    request.headers.authorization = this.contextValue.token;
   }
 
   async getUsers (): Promise<IUserRes[]> {
@@ -47,8 +48,6 @@ export class UsersAPI extends RESTDataSource {
       role: roleData.id
     }
 
-    await this.post('users', { body: newData });
-
-    return newData;
+    return await this.post('users', { body: newData });
   }
 };
