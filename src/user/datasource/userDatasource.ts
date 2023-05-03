@@ -37,17 +37,38 @@ export class UsersAPI extends RESTDataSource {
     };
   }
 
-  async createUser (user: IUser): Promise<IUser> {
+  async createUser (user: IUser): Promise<IUserRes> {
     const data = await this.get<IUser[]>('users');
-    const [roleData] = await this.get<IRole[]>(`roles?type=${user.role}`);
+    const [role] = await this.get<IRole[]>(`roles?type=${user.role}`);
     const userId = Number(data.length) + 1;
 
-    const newData = {
+    await this.post('users', { body: {
       id: userId,
       ...user,
-      role: roleData.id
-    }
+      role: role.id
+    } });
 
-    return await this.post('users', { body: newData });
+    return {
+      ...user,
+      role
+    }
+  }
+
+  async updateUser (user: IUser): Promise<IUserRes> {
+    const [role] = await this.get<IRole[]>(`roles?type=${user.role}`);
+    await this.put(`users/${user.id}`, { body: {
+      ...user,
+      role: role.id
+    } })
+
+    return {
+      ...user,
+      role
+    }
+  }
+
+  async deleteUser (id: number): Promise<number> {
+    await this.delete(`users/${encodeURIComponent(id)}`);
+    return id;
   }
 };

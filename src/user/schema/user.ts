@@ -23,5 +23,13 @@ export const UserSchema = `
       email: String
       role: String!
     ): User!
+    updateUser(
+      id: ID!
+      nome: String
+      ativo: Boolean
+      email: String
+      role: String
+    ): User!
+    deleteUser(id: ID!): ID!
   }
 `;
