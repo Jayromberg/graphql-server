@@ -41,6 +41,20 @@
       "ativo": true,
       "email": "m@m.com",
       "role": 2
+    },
+    {
+      "id": 7,
+      "nome": "Jayro",
+      "ativo": true,
+      "email": "test@test.com.br",
+      "role": 3
+    },
+    {
+      "id": 8,
+      "nome": "Jayro",
+      "ativo": true,
+      "email": "test@test.com.br",
+      "role": 3
     }
   ],
   "roles": [
