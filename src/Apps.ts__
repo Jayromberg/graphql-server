@@ -1,39 +1,69 @@
+import express from 'express';
+import cors from 'cors';
+import http from 'http';
 import { ApolloServer } from '@apollo/server';
-import { startStandaloneServer } from '@apollo/server/standalone';
-// import IMyContext from './interfaces/IMyContext';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { expressMiddleware } from '@apollo/server/express4';
+import bodyParser from 'body-parser';
+import IMyContext from './interfaces/IMyContext';
 import { UsersAPI } from './user';
 
-interface ContextValue {
-  dataSources: {
-    usersAPI: UsersAPI
+class App {
+  public app: express.Express;
+  protected httpServer: http.Server;
+  protected apolloServer: any;
+
+  constructor () {
+    this.app = express();
+    this.httpServer = http.createServer(this.app);
+    this.config();
+
+    // Não remover essa rota
+    this.app.get('/tests', (_req, res) => res.json({ ok: true }));
   }
-}
 
-class Apps {
-  readonly apolloServer: any;
+  private config (): void {
+    this.app.use(cors<cors.CorsRequest>({
+      origin: '*'
+    }));
+    this.app.use(bodyParser.json());
+  }
 
-  constructor (typeDefs: any, resolvers: any) {
-    this.apolloServer = new ApolloServer<ContextValue>({
+  public async configApollo (typeDefs: any, resolvers: any): Promise<void> {
+    const httpServer = this.httpServer;
+
+    this.apolloServer = new ApolloServer<IMyContext>({
       typeDefs,
-      resolvers
+      resolvers,
+      plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
     });
+
+    await this.apolloServer.start();
   }
 
   public async startServer (PORT: number): Promise<void> {
-    const { url } = await startStandaloneServer(this.apolloServer, {
-      listen: { port: PORT },
-      context: async () => {
-        const { cache } = this.apolloServer;
-        return {
-          dataSources: {
-            usersAPI: new UsersAPI({ cache })
-          }
-        };
-      }
-    });
+    this.app.use(
+      expressMiddleware(this.apolloServer, {
+        context: async ({ req }) => {
+          const { cache } = this.apolloServer;
+          const token = req.header('authorization');
 
-    console.log(`🚀  Server ready at: ${url}`);
+          return {
+            token,
+            dataSources: {
+              usersAPI: new UsersAPI({ token, cache })
+            }
+          };
+        }
+      })
+    )
+
+    await new Promise<void>((resolve) => this.httpServer.listen({ port: PORT }, resolve));
+    console.log(`🚀 Server ready at http://localhost:${PORT}/`);
   }
 }
 
-export { Apps };
+export { App };
+
+// A execução dos testes de cobertura depende dessa exportação
+export const { app } = new App();
