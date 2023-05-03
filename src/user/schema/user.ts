@@ -22,6 +22,6 @@ export const UserSchema = `
       ativo: Boolean!
       email: String
       role: String!
-    )
+    ): User!
   }
 `;
