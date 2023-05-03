@@ -1,9 +1,12 @@
 export const UserSchema = `
+  scalar Date
+
   type User {
     nome: String!
     ativo: Boolean!
     email: String
     role: Role!
+    createdAt: Date
   }
 
   type Role {
@@ -22,6 +25,7 @@ export const UserSchema = `
       ativo: Boolean!
       email: String
       role: String!
+      createdAt: Date!
     ): User!
     updateUser(
       id: ID!
