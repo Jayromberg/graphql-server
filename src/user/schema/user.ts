@@ -30,5 +30,6 @@ export const UserSchema = `
       email: String
       role: String
     ): User!
+    deleteUser(id: ID!): ID!
   }
 `;

@@ -13,6 +13,9 @@ export const userResolvers = {
     },
     updateUser: async (_, { id, nome, ativo, email, role }, { dataSources }) => {
       return dataSources.usersAPI.updateUser({ id, nome, ativo, email, role });
+    },
+    deleteUser: async (_, { id }, { dataSources }) => {
+      return dataSources.usersAPI.deleteUser(id);
     }
   }
 }

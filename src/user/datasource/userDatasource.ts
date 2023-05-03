@@ -66,4 +66,9 @@ export class UsersAPI extends RESTDataSource {
       role
     }
   }
+
+  async deleteUser (id: number): Promise<number> {
+    await this.delete(`users/${encodeURIComponent(id)}`);
+    return id;
+  }
 };
