@@ -2,6 +2,11 @@ import dateScalar from '../customScalars/dateScalar';
 
 export const userResolvers = {
   Date: dateScalar,
+  RolesType: {
+    ESTUDANTE: 'ESTUDANTE',
+    DOCENTE: 'DOCENTE',
+    COORDENACAO: 'COORDENACAO'
+  },
   Query: {
     users: async (_, __, { dataSources }) => {
       return dataSources.usersAPI.getUsers();
