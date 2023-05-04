@@ -1,17 +1,23 @@
 export const UserSchema = `
   scalar Date
 
+  enum RolesType {
+    ESTUDANTE
+    DOCENTE
+    COORDENACAO
+  }
+
+  type Role {
+    id: ID!
+    type: RolesType!
+  }
+
   type User {
     nome: String!
     ativo: Boolean!
     email: String
     role: Role!
     createdAt: Date
-  }
-
-  type Role {
-    id: ID!
-    type: String!
   }
 
   type Query {
@@ -24,7 +30,7 @@ export const UserSchema = `
       nome: String!
       ativo: Boolean!
       email: String
-      role: String!
+      role: RolesType!
       createdAt: Date!
     ): User!
     updateUser(
@@ -32,7 +38,7 @@ export const UserSchema = `
       nome: String
       ativo: Boolean
       email: String
-      role: String
+      role: RolesType
     ): User!
     deleteUser(id: ID!): ID!
   }
